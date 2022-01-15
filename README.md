@@ -1,6 +1,6 @@
 ## Getting Started
 
-Pabau Assignment is a task given by Gazmend to test our nextjs | apollo client | material ui and you name it skills. 
+Pabau Assignment is a task given by Gazmend to test our nextjs | apollo client | material ui skills.
 
 ### Setup
 
@@ -30,7 +30,7 @@ Install dependencies via npm or yarn
 npm install
 ```
 
-or 
+or
 
 ```bash
 yarn add
@@ -38,11 +38,26 @@ yarn add
 
 ## Start Application
 
-
 And finally start the development server using the script below
 
 ```bash
 npm run dev
 ```
 
-You can visit ```bash http://localhost:3000``` to view the running application
+You can visit `bash http://localhost:3000` to view the running application
+
+## Start the build application
+
+To start the build application run the script below
+
+```bash
+npm run build
+```
+
+after that do
+
+```bash
+npm start
+```
+
+You can visit `bash http://localhost:3000` to view the running application
