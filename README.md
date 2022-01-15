@@ -44,7 +44,7 @@ And finally start the development server using the script below
 npm run dev
 ```
 
-You can visit `bash http://localhost:3000` to view the running application
+You can visit <a href="http://localhost:3000">http://localhost:3000</a> to view the running application
 
 ## Start the build application
 
@@ -60,4 +60,4 @@ after that do
 npm start
 ```
 
-You can visit `bash http://localhost:3000` to view the running application
+You can visit <a href="http://localhost:3000">http://localhost:3000</a> to view the running application
