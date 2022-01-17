@@ -1,24 +1,22 @@
-// apollo client
-import { ApolloProvider } from '@apollo/client';
-
-// emotion react
-import { CacheProvider, EmotionCache } from '@emotion/react';
-
-// material ui
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
+// react
+import { FC } from 'react';
 
 // next
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
-// react
-import { FC } from 'react';
+// material ui
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+
+// apollo client
+import { ApolloProvider } from '@apollo/client';
 
 // graphql
 import { client as apolloClient } from '@graphql/client';
 
 // emotion
+import { CacheProvider, EmotionCache } from '@emotion/react';
 import { createEmotionCache } from '../materialui/createEmotionCache';
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -28,7 +26,7 @@ const clientSideEmotionCache = createEmotionCache();
 import { theme } from '../materialui/theme';
 
 // styles
-import '../styles/main.css';
+import '../styles/main.scss';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;

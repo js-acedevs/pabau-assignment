@@ -1,0 +1,29 @@
+# Past Launches
+query pastLaunches($limit: Int!, $offset: Int!) {
+  launchesPast(limit: $limit, offset: $offset) {
+    id
+    missionId: mission_id
+    missionName: mission_name
+    launchSuccess: launch_success
+    links {
+      flickrImages: flickr_images
+    }
+    ships {
+      ...Ship
+    }
+  }
+}
+
+# Launch Rocket
+query launchRocketById($launchId: ID!) {
+  launch(id: $launchId) {
+    id
+    rocket {
+      rocket_name
+      rocket_type
+      rocket {
+        ...Rocket
+      }
+    }
+  }
+}

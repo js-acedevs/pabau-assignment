@@ -36,6 +36,12 @@ or
 yarn add
 ```
 
+Finally build the app for use
+
+```bash
+npm run build
+```
+
 ## Start Application
 
 And finally start the development server using the script below

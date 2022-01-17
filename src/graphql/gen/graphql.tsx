@@ -1,17 +1,10 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -1282,7 +1275,28 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type PastLaunchesQueryVariables = Exact<{ [key: string]: never }>;
+export type RocketFragment = {
+  __typename?: 'Rocket';
+  name?: string | null | undefined;
+  company?: string | null | undefined;
+  country?: string | null | undefined;
+  description?: string | null | undefined;
+  active?: boolean | null | undefined;
+  boosters?: number | null | undefined;
+  costPerLaunch?: number | null | undefined;
+  mass?: { __typename?: 'Mass'; lb?: number | null | undefined } | null | undefined;
+};
+
+export type ShipFragment = {
+  __typename?: 'Ship';
+  name?: string | null | undefined;
+  successfulLandings?: number | null | undefined;
+};
+
+export type PastLaunchesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+}>;
 
 export type PastLaunchesQuery = {
   __typename?: 'Query';
@@ -1291,11 +1305,26 @@ export type PastLaunchesQuery = {
         | {
             __typename?: 'Launch';
             id?: string | null | undefined;
-            rocket?:
+            missionId?: Array<string | null | undefined> | null | undefined;
+            missionName?: string | null | undefined;
+            launchSuccess?: boolean | null | undefined;
+            links?:
               | {
-                  __typename?: 'LaunchRocket';
-                  rocketName?: string | null | undefined;
+                  __typename?: 'LaunchLinks';
+                  flickrImages?: Array<string | null | undefined> | null | undefined;
                 }
+              | null
+              | undefined;
+            ships?:
+              | Array<
+                  | {
+                      __typename?: 'Ship';
+                      name?: string | null | undefined;
+                      successfulLandings?: number | null | undefined;
+                    }
+                  | null
+                  | undefined
+                >
               | null
               | undefined;
           }
@@ -1306,15 +1335,82 @@ export type PastLaunchesQuery = {
     | undefined;
 };
 
+export type LaunchRocketByIdQueryVariables = Exact<{
+  launchId: Scalars['ID'];
+}>;
+
+export type LaunchRocketByIdQuery = {
+  __typename?: 'Query';
+  launch?:
+    | {
+        __typename?: 'Launch';
+        id?: string | null | undefined;
+        rocket?:
+          | {
+              __typename?: 'LaunchRocket';
+              rocket_name?: string | null | undefined;
+              rocket_type?: string | null | undefined;
+              rocket?:
+                | {
+                    __typename?: 'Rocket';
+                    name?: string | null | undefined;
+                    company?: string | null | undefined;
+                    country?: string | null | undefined;
+                    description?: string | null | undefined;
+                    active?: boolean | null | undefined;
+                    boosters?: number | null | undefined;
+                    costPerLaunch?: number | null | undefined;
+                    mass?:
+                      | { __typename?: 'Mass'; lb?: number | null | undefined }
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
+};
+
+export const RocketFragmentDoc = gql`
+  fragment Rocket on Rocket {
+    name
+    company
+    country
+    description
+    active
+    mass {
+      lb
+    }
+    costPerLaunch: cost_per_launch
+    boosters
+  }
+`;
+export const ShipFragmentDoc = gql`
+  fragment Ship on Ship {
+    name
+    successfulLandings: successful_landings
+  }
+`;
 export const PastLaunchesDocument = gql`
-  query pastLaunches {
-    launchesPast(limit: 10) {
+  query pastLaunches($limit: Int!, $offset: Int!) {
+    launchesPast(limit: $limit, offset: $offset) {
       id
-      rocket {
-        rocketName: rocket_name
+      missionId: mission_id
+      missionName: mission_name
+      launchSuccess: launch_success
+      links {
+        flickrImages: flickr_images
+      }
+      ships {
+        ...Ship
       }
     }
   }
+  ${ShipFragmentDoc}
 `;
 
 /**
@@ -1329,11 +1425,13 @@ export const PastLaunchesDocument = gql`
  * @example
  * const { data, loading, error } = usePastLaunchesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
 export function usePastLaunchesQuery(
-  baseOptions?: Apollo.QueryHookOptions<PastLaunchesQuery, PastLaunchesQueryVariables>
+  baseOptions: Apollo.QueryHookOptions<PastLaunchesQuery, PastLaunchesQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<PastLaunchesQuery, PastLaunchesQueryVariables>(
@@ -1355,4 +1453,60 @@ export type PastLaunchesLazyQueryHookResult = ReturnType<typeof usePastLaunchesL
 export type PastLaunchesQueryResult = Apollo.QueryResult<
   PastLaunchesQuery,
   PastLaunchesQueryVariables
+>;
+export const LaunchRocketByIdDocument = gql`
+  query launchRocketById($launchId: ID!) {
+    launch(id: $launchId) {
+      id
+      rocket {
+        rocket_name
+        rocket_type
+        rocket {
+          ...Rocket
+        }
+      }
+    }
+  }
+  ${RocketFragmentDoc}
+`;
+
+/**
+ * __useLaunchRocketByIdQuery__
+ *
+ * To run a query within a React component, call `useLaunchRocketByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLaunchRocketByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLaunchRocketByIdQuery({
+ *   variables: {
+ *      launchId: // value for 'launchId'
+ *   },
+ * });
+ */
+export function useLaunchRocketByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<LaunchRocketByIdQuery, LaunchRocketByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LaunchRocketByIdQuery, LaunchRocketByIdQueryVariables>(
+    LaunchRocketByIdDocument,
+    options
+  );
+}
+export function useLaunchRocketByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LaunchRocketByIdQuery, LaunchRocketByIdQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LaunchRocketByIdQuery, LaunchRocketByIdQueryVariables>(
+    LaunchRocketByIdDocument,
+    options
+  );
+}
+export type LaunchRocketByIdQueryHookResult = ReturnType<typeof useLaunchRocketByIdQuery>;
+export type LaunchRocketByIdLazyQueryHookResult = ReturnType<typeof useLaunchRocketByIdLazyQuery>;
+export type LaunchRocketByIdQueryResult = Apollo.QueryResult<
+  LaunchRocketByIdQuery,
+  LaunchRocketByIdQueryVariables
 >;

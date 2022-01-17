@@ -39,7 +39,8 @@
     "prettier",
     "import",
     "sonarjs",
-    "simple-import-sort"
+    "simple-import-sort",
+    "@emotion"
   ],
   "rules": {
     //
@@ -99,6 +100,12 @@
         "ignoreDestructuring": true
       }
     ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+      }
+    ],
     //
     // Prettier rules
     //
@@ -132,9 +139,32 @@
         "groups": ["builtin", "external", "internal", "sibling", "parent", "index", "object"],
         "pathGroups": [
           {
-            "pattern": "next",
+            "pattern": "react",
             "group": "builtin",
             "position": "before"
+          },
+          {
+            "pattern": "next",
+            "group": "builtin",
+            "position": "after"
+          },
+          {
+            "pattern": "next/**",
+            "patternOptions": {
+              "pattern": "next"
+            },
+            "group": "builtin",
+            "position": "after"
+          },
+          {
+            "pattern": "@config/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@mui/material",
+            "group": "external",
+            "position": "after"
           },
           {
             "pattern": "@hooks/**",
@@ -142,10 +172,7 @@
             "position": "after"
           },
           {
-            "pattern": "@config/**",
-            "patternOptions": {
-              "pattern": "@hooks/**"
-            },
+            "pattern": "@apollo/client",
             "group": "external",
             "position": "after"
           },
@@ -198,6 +225,11 @@
             "position": "after"
           },
           {
+            "pattern": "@emotion/react",
+            "group": "external",
+            "position": "after"
+          },
+          {
             "pattern": "@utils/**",
             "patternOptions": {
               "pattern": "@graphql/**"
@@ -206,9 +238,17 @@
             "position": "after"
           },
           {
-            "pattern": "@interfaces/**",
+            "pattern": "@enums/**",
             "patternOptions": {
               "pattern": "@utils/**"
+            },
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@interfaces/**",
+            "patternOptions": {
+              "pattern": "@enums/**"
             },
             "group": "external",
             "position": "after"
@@ -224,7 +264,8 @@
         ],
         "newlines-between": "ignore",
         "alphabetize": { "order": "asc", "caseInsensitive": true },
-        "warnOnUnassignedImports": false
+        "warnOnUnassignedImports": false,
+        "pathGroupsExcludedImportTypes": ["@mui/material"]
       }
     ],
     //
@@ -352,6 +393,7 @@
     "unicorn/prefer-prototype-methods": "off",
     // not necessary to our codestyle
     "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-empty-file": "off",
     // SonarJS rules
     //
     // all branches in a conditional structure should not have exactly the same implementation
@@ -397,8 +439,16 @@
     // object literal syntax should be used
     "sonarjs/prefer-object-literal": "warn",
     // easy autofixable import sorting with eslint-plugin-simple-import-sort
+    //
+    // Simple sort rules
     "simple-import-sort/imports": "off",
-    "simple-import-sort/exports": "warn"
+    "simple-import-sort/exports": "warn",
+    //
+    // Emotion Rules
+    "@emotion/no-vanilla": "error",
+    "@emotion/import-from-emotion": "error",
+    "@emotion/styled-import": "error",
+    "@emotion/pkg-renaming": "error"
   },
   "overrides": [
     {
@@ -413,6 +463,17 @@
       "files": "src/**.tsx",
       "rules": {
         "import/order": "off"
+      }
+    },
+    {
+      "files": ["src/graphql/gen/**"],
+      "rules": {
+        "max-len": "off",
+        "camelcase": "off",
+        "import/newline-after-import": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off"
       }
     }
   ]
