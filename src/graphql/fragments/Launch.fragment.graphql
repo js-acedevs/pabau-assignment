@@ -1,0 +1,17 @@
+fragment PastLaunch on Launch {
+  id
+  missionId: mission_id
+  missionName: mission_name
+  launchSuccess: launch_success
+  details
+  links {
+    ...Link
+  }
+  rocket {
+    rocket_name
+    rocket_type
+    rocket {
+      ...Rocket
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# All Launches
+query allPastLaunches {
+  launchesPast {
+    ...PastLaunch
+  }
+}
+
+# Past Launches
+query pastLaunches($limit: Int!, $offset: Int!) {
+  launchesPast(limit: $limit, offset: $offset) {
+    ...PastLaunch
+  }
+}
+
+# Launch Rocket
+query launchRocketById($launchId: ID!) {
+  launch(id: $launchId) {
+    ...PastLaunch
+  }
+}

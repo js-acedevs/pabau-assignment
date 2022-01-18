@@ -1,0 +1,4 @@
+fragment Ship on Ship {
+  name
+  successfulLandings: successful_landings
+}

@@ -1,0 +1,5 @@
+build/*
+public/*
+src/next-env.d.ts
+src/graphql/gen
+.eslintrc.js
