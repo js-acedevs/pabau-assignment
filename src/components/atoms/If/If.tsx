@@ -3,7 +3,7 @@ import { FC, ReactElement } from 'react';
 
 // props
 interface IfProps {
-  condition: boolean;
+  condition?: boolean | null;
 }
 
 export const If: FC<IfProps> = ({ condition, children }): ReactElement | null =>

@@ -146,7 +146,7 @@
           {
             "pattern": "next",
             "group": "builtin",
-            "position": "after"
+            "position": "before"
           },
           {
             "pattern": "next/**",
@@ -157,22 +157,15 @@
             "position": "after"
           },
           {
-            "pattern": "@config/**",
-            "group": "external",
-            "position": "after"
-          },
-          {
-            "pattern": "@mui/material",
-            "group": "external",
-            "position": "after"
-          },
-          {
             "pattern": "@hooks/**",
             "group": "external",
             "position": "after"
           },
           {
-            "pattern": "@apollo/client",
+            "pattern": "@config/**",
+            "patternOptions": {
+              "pattern": "@hooks/**"
+            },
             "group": "external",
             "position": "after"
           },
@@ -225,11 +218,6 @@
             "position": "after"
           },
           {
-            "pattern": "@emotion/react",
-            "group": "external",
-            "position": "after"
-          },
-          {
             "pattern": "@utils/**",
             "patternOptions": {
               "pattern": "@graphql/**"
@@ -265,7 +253,7 @@
         "newlines-between": "ignore",
         "alphabetize": { "order": "asc", "caseInsensitive": true },
         "warnOnUnassignedImports": false,
-        "pathGroupsExcludedImportTypes": ["@mui/material"]
+        "pathGroupsExcludedImportTypes": ["@mui/material", "react"]
       }
     ],
     //

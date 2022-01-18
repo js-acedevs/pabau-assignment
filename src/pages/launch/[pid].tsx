@@ -5,15 +5,22 @@ import { useRouter } from 'next/router';
 import { ArrowBack } from '@mui/icons-material';
 
 // material ui
-import { Box } from '@mui/system';
 import { Container, CssBaseline, IconButton, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+
+// graphql
+import { useGetRocketById } from '@graphql/hooks/useGetRocketById';
+import { LaunchStatus } from '../../components/atoms';
 
 const SingleLaunch = () => {
   // hooks
-  const { back, query } = useRouter();
+  const {
+    back,
+    query: { pid },
+  } = useRouter();
 
-  // pid
-  const { pid } = query;
+  // graphql
+  const { data } = useGetRocketById({ launchId: pid?.toString() || '' });
 
   // handlers
   const handleGoBack = () => back();
@@ -28,18 +35,36 @@ const SingleLaunch = () => {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
+          sm: {
+            display: 'block',
+          },
         }}
       >
         <CssBaseline />
         <Container component="main" sx={{ mt: 8, mb: 2 }} maxWidth="sm">
           <Typography variant="h2" component="h1" gutterBottom>
-            {pid}
+            {data?.launch?.missionName && data.launch.missionName}
           </Typography>
           <Typography variant="h5" component="h2" gutterBottom>
-            {'Pin a footer to the bottom of the viewport.'}
-            {'The footer will move as the main element of the page grows.'}
+            {data?.launch?.details}
           </Typography>
-          <Typography variant="body1">Sticky footer placeholder.</Typography>
+          <Typography variant="body1">
+            <ul>
+              <li>
+                <Typography component="span" sx={{ paddingRight: '20px' }}>
+                  Active:{' '}
+                </Typography>
+                <LaunchStatus status={data?.launch?.rocket?.rocket?.active || false} />
+              </li>
+              <li>Cost Per Launch: {data?.launch?.rocket?.rocket?.costPerLaunch}$</li>
+              <li>Boosters: {data?.launch?.rocket?.rocket?.boosters}</li>
+              <li>Company: {data?.launch?.rocket?.rocket?.company}</li>
+              <li>Name: {data?.launch?.rocket?.rocket?.name}</li>
+              <li>Description: {data?.launch?.rocket?.rocket?.description}</li>
+              <li>Country: {data?.launch?.rocket?.rocket?.country}</li>
+              <li>Type: {data?.launch?.rocket?.rocket_type}</li>
+            </ul>
+          </Typography>
         </Container>
       </Box>
     </>

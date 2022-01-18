@@ -1,54 +1,29 @@
-// react
-import { FC } from 'react';
-
 // next
 import type { AppProps } from 'next/app';
-import Head from 'next/head';
-
-// material ui
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 
 // apollo client
 import { ApolloProvider } from '@apollo/client';
 
+// materialui
+import { CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+
 // graphql
 import { client as apolloClient } from '@graphql/client';
-
-// emotion
-import { CacheProvider, EmotionCache } from '@emotion/react';
-import { createEmotionCache } from '../materialui/createEmotionCache';
-
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache();
-
-// theme
-import { theme } from '../materialui/theme';
 
 // styles
 import '../styles/main.scss';
 
-interface MyAppProps extends AppProps {
-  emotionCache?: EmotionCache;
-}
+// theme
+import { theme } from '@materialui/theme';
 
-const MyApp: FC<MyAppProps> = ({
-  Component,
-  pageProps,
-  emotionCache = clientSideEmotionCache,
-}: MyAppProps) => (
-  <CacheProvider value={emotionCache}>
-    <Head>
-      <meta name="viewport" content="initial-scale=1, width=device-width" />
-    </Head>
+const MyApp = ({ Component, pageProps }: AppProps) => (
+  <ApolloProvider client={apolloClient}>
     <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
-      <ApolloProvider client={apolloClient}>
-        <Component {...pageProps} />
-      </ApolloProvider>
+      <Component {...pageProps} />
     </ThemeProvider>
-  </CacheProvider>
+  </ApolloProvider>
 );
 
 export default MyApp;

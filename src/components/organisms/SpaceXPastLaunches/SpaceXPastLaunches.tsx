@@ -1,43 +1,27 @@
-// react
-import { useState, ChangeEvent } from 'react';
+// material ui
+import { Grid, Stack, Typography } from '@mui/material';
 
 // config
 import { ITEMS_PER_PAGE } from '@config/index';
 
-// material ui
-import { Box, Grid, Pagination } from '@mui/material';
-
 // atoms
-import { If } from '@atoms/index';
+import { If, Ternary } from '@atoms/index';
+
+// molecules
+import { Pagination } from '@molecules/index';
 
 // molecules
 import { SpaceXLaunchCard } from '@molecules/index';
 
 // graphql
-import { usePastLaunchesQuery } from '@graphql/gen/graphql';
-
-// dummy data
-import { pastLaunches } from '../../../static/pastLaunches';
+import { useGetPastLaunches } from '@graphql/hooks/useGetPastLaunches';
 
 export const SpaceXPastLaunches = () => {
-  // local states
-  const [page, setPage] = useState(1);
-
   // graphql
-  const { data } = usePastLaunchesQuery({
-    variables: {
-      limit: ITEMS_PER_PAGE,
-      offset: page * ITEMS_PER_PAGE - 4,
-    },
-  });
-
-  // handlers
-  const handleChange = (event: ChangeEvent<unknown>, value: number) => setPage(value);
-
-  console.log(page, data);
+  const { pastLaunches, pastLaunchesNumber, loading } = useGetPastLaunches();
 
   return (
-    <>
+    <Ternary condition={!loading} fallback={<p>Loading Data....</p>}>
       <Grid
         container
         spacing={2}
@@ -50,31 +34,35 @@ export const SpaceXPastLaunches = () => {
           marginTop: '5rem',
         }}
       >
-        <If condition={data?.launchesPast?.length !== 0}>
-          {data?.launchesPast?.map((launch) => (
-            <Grid key={launch?.id} item>
-              <SpaceXLaunchCard />
-            </Grid>
-          ))}
-        </If>
+        {pastLaunches.map((launch) => (
+          <Grid key={launch?.id} item>
+            <SpaceXLaunchCard
+              id={launch?.id || ' '}
+              missionId={(launch?.missionId && launch.missionId[0]) || ' '}
+              missionName={launch?.missionName || ' '}
+              launchSuccess={launch?.launchSuccess || false}
+              image={(launch?.links?.flickrImages && launch.links.flickrImages[0]) || ' '}
+              details={launch?.details || ''}
+            />
+          </Grid>
+        ))}
       </Grid>
 
-      <If condition={pastLaunches.length > ITEMS_PER_PAGE}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            margin: '3rem 1rem',
-          }}
+      <Pagination itemsToShow={Math.ceil(pastLaunchesNumber / ITEMS_PER_PAGE)} />
+
+      <If condition={!pastLaunches?.length && !loading}>
+        <Stack
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={1}
+          sx={{ mt: 20 }}
         >
-          <Pagination
-            count={Math.ceil(pastLaunches.length / ITEMS_PER_PAGE)}
-            defaultPage={1}
-            size="large"
-            onChange={handleChange}
-          />
-        </Box>
+          <Typography variant="h4" gutterBottom>
+            Opss. There is no data to show!!!
+          </Typography>
+        </Stack>
       </If>
-    </>
+    </Ternary>
   );
 };

@@ -1,0 +1,3 @@
+fragment Link on LaunchLinks {
+  flickrImages: flickr_images
+}
