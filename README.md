@@ -36,7 +36,9 @@ or
 yarn add
 ```
 
+```bash
 create an .env file and move the variables from .env.dev to .env
+```
 
 Finally build the app for use
 
