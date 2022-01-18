@@ -36,6 +36,8 @@ or
 yarn add
 ```
 
+create an .env file and move the variables from .env.dev to .env
+
 Finally build the app for use
 
 ```bash
